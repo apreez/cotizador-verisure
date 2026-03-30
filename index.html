@@ -542,7 +542,10 @@ async function guardar() {
     });
     if(r.ok){ toast('¡Cotización guardada!','ok'); limpiar(); }
     else{ const e=await r.json(); toast('Error: '+(e.message||'Revisa los datos'),'err'); console.error(e); }
-  }catch(e){ toast('Sin conexión','err'); }
+  }catch(e){
+    console.error('Error detalle:', e);
+    toast('Error: '+e.message,'err');
+  }
   btn.textContent='Guardar cotización'; btn.disabled=false;
 }
 
@@ -563,7 +566,10 @@ async function cargarCots() {
     COTS=await r.json();
     updateStats();
     filtrar();
-  }catch(e){ document.getElementById('cot-list').innerHTML='<div class="empty">Sin conexión a la base de datos</div>'; }
+  }catch(e){
+    console.error('Supabase error:', e);
+    document.getElementById('cot-list').innerHTML='<div class="empty">Error: '+e.message+'</div>';
+  }
 }
 
 function updateStats() {
